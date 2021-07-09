@@ -1,9 +1,6 @@
-# RTMP-HLS Docker
+# RTMP-HLS Docker w/ Datetime Tag Functionality
 
 **Docker image for video streaming server that supports RTMP, HLS, and DASH streams.**
-
-[![Docker Automated build](https://img.shields.io/docker/cloud/automated/alqutami/rtmp-hls.svg)](https://hub.docker.com/r/alqutami/rtmp-hls/builds/)
-[![Build Status](https://img.shields.io/docker/cloud/build/alqutami/rtmp-hls.svg)](https://hub.docker.com/r/alqutami/rtmp-hls)
 
 ## Description
 
@@ -12,6 +9,26 @@ It also allows adaptive streaming and custom transcoding of video streams.
 All modules are built from source on Debian and Alpine Linux base images.
 
 ## Features
+  For the most part, things work just like the original repro.  This fork adds
+  the option to append `datetime` diretives to HLS segments:
+
+  ```
+  .....
+  application show {
+			live on;
+			hls on; # Enable HTTP Live Streaming
+
+      hls_datetime system; # Appends '#EXT-X-PROGRAM-DATE-TIME' tag to media segments
+
+      hls_fragment_naming system;
+			hls_path /mnt/hls/;  # hls fragments path
+			hls_variant _high BANDWIDTH=1152000; # High bitrate, higher-than-SD resolution
+			hls_variant _mid BANDWIDTH=448000; # Medium bitrate, SD resolution
+			hls_variant _low BANDWIDTH=288000; # Low bitrate, sub-SD resolution
+	}
+  .....
+  ```
+
  * The backend is [**Nginx**](http://nginx.org/en/) with [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module).
  * [**FFmpeg**](https://www.ffmpeg.org/) for transcoding and adaptive streaming.
  * Default settings: 
@@ -27,23 +44,25 @@ Current Image is built using:
  * Nginx-rtmp-module 1.2.1 (compiled from source)
  * FFmpeg 4.2.1 (compiled from source)
 
-This image was inspired by similar docker images from [tiangolo](https://hub.docker.com/r/tiangolo/nginx-rtmp/) and [alfg](https://hub.docker.com/r/alfg/nginx-rtmp/). It has small build size, adds support for HTTP-based streams and adaptive streaming using FFmpeg.
+This image was inspired by similar docker images from [tiangolo](https://hub.docker.com/r/tiangolo/nginx-rtmp/), [alfg](https://hub.docker.com/r/alfg/nginx-rtmp/), and (OF COURSE), the original repository by [alqutami](https://hub.docker.com/r/alqutami/rtmp-hls)!
+
+This image, as of now, only adds the ability to control the `EXT-X-PROGRAM-DATE-TIME` tag for media segments.
 
 ## Usage
 
 ### To run the server
 ```
-docker run -d -p 1935:1935 -p 8080:8080 alqutami/rtmp-hls
+docker run -d -p 1935:1935 -p 8080:8080 vinnyA3/rtmp-hls-extended
 ```
 
 For Alpine-based Image use:
 ```
-docker run -d -p 1935:1935 -p 8080:8080 alqutami/rtmp-hls:latest-alpine
+docker run -d -p 1935:1935 -p 8080:8080 vinnyA3/rtmp-hls-extended:latest-alpine
 ```
 
 To run with custom conf file:
 ```
-docker run -d -p 1935:1935 -p 8080:8080 -v custom.conf:/etc/nginx/nginx.conf alqutami/rtmp-hls
+docker run -d -p 1935:1935 -p 8080:8080 -v custom.conf:/etc/nginx/nginx.conf vinnyA3/rtmp-hls-extended
 ```
 where `custom.conf` is the new conf file for Nginx.
 
@@ -84,7 +103,7 @@ The provided demo players assume the stream-key is called `test` and the player 
 	* These web players are hardcoded to play stream key "test" at localhost.
 	* To change the stream source for these players. Download the html files and modify the `src` attribute in the video tag in the html file. You can then mount the modified files to the container as follows:
 		```
-		docker run -d -p 1935:1935 -p 8080:8080 -v custom_players:/usr/local/nginx/html/players alqutami/rtmp-hls
+		docker run -d -p 1935:1935 -p 8080:8080 -v custom_players:/usr/local/nginx/html/players vinnyA3/rtmp-hls-extended
 		```
 		where `custom_players` is the directory holding the modified html files.
 
@@ -92,6 +111,6 @@ The provided demo players assume the stream-key is called `test` and the player 
 Released under MIT license.
 
 ## More info
- * **GitHub repo**: <https://github.com/TareqAlqutami/rtmp-hls-server.git>
+ * **GitHub repo**: <https://github.com/vinnyA3/rtmp-hls-server.git>
 
- * **Docker Hub image**: <https://hub.docker.com/r/alqutami/rtmp-hls>
+ * **Docker Hub image**: <https://hub.docker.com/r/vinnyA3/rtmp-hls-extended>

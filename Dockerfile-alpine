@@ -2,11 +2,11 @@ ARG ALPINE_VERSION=3.11
 
 ##### Building stage #####
 FROM alpine:${ALPINE_VERSION} as builder
-MAINTAINER Tareq Alqutami <tareqaziz2010@gmail.com>
+MAINTAINER Vincent Aceto <vincent.aceto@gmail.com>
 
 # Versions of nginx, rtmp-module and ffmpeg 
 ARG  NGINX_VERSION=1.17.5
-ARG  NGINX_RTMP_MODULE_VERSION=1.2.1
+ARG  NGINX_RTMP_MODULE_VERSION=1.2.1-hls-feat
 ARG  FFMPEG_VERSION=4.2.1
 
 # Install dependencies

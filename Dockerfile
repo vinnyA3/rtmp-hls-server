@@ -2,11 +2,11 @@ ARG DEBIAN_VERSION=stretch-slim
 
 ##### Building stage #####
 FROM debian:${DEBIAN_VERSION} as builder
-MAINTAINER Tareq Alqutami <tareqaziz2010@gmail.com>
+MAINTAINER Vincent Aceto <vincent.aceto@gmail.com>
 
 # Versions of nginx, rtmp-module and ffmpeg 
 ARG  NGINX_VERSION=1.17.5
-ARG  NGINX_RTMP_MODULE_VERSION=1.2.1
+ARG  NGINX_RTMP_MODULE_VERSION=1.2.1-hls-feat
 ARG  FFMPEG_VERSION=4.2.1
 
 # Install dependencies
@@ -29,7 +29,7 @@ RUN mkdir -p /tmp/build && \
 
 # Download rtmp-module source
 RUN cd /tmp/build && \
-    wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.tar.gz && \
+    wget https://github.com/vinnyA3/nginx-rtmp-module/archive/v${NGINX_RTMP_MODULE_VERSION}.tar.gz && \
     tar -zxf v${NGINX_RTMP_MODULE_VERSION}.tar.gz && \
 	rm v${NGINX_RTMP_MODULE_VERSION}.tar.gz
 
